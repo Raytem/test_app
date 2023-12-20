@@ -26,8 +26,11 @@ Initially, the application creates one user in table "users"
 
 ### App routes:
 1. **Route to increase the balance by 2 of user with id = userId**
-    - /user/:userId/incBalance
-    - body example: { amount: 2 }
+    - method: PATCH
+    - path: /user/:userId/incBalance
+    - body: { amount: 2 }
+    
 2. **Route to decrease the balance by 2 of user with id = userId**
-    - /user/:userId/decBalance
-    - body example: { amount: 2 }
+    - method: PATCH
+    - path: /user/:userId/decBalance
+    - body: { amount: 2 }
