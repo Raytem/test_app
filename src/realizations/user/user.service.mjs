@@ -8,10 +8,13 @@ class UserService {
   async increaseBalance(userId, changeBalanceDto) {
     let updateData = null;
 
-    await sequelize.transaction({
+    const retryFunction = async () => await sequelize.transaction({
       isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
     }, async (t) => {
-      const user = await UserModel.findByPk(userId, {plain: true});
+      const user = await UserModel.findByPk(userId, {
+        plain: true, 
+        transaction: t,
+      });
       if (!user) {
         throw ApiError.NotFound('no such user');
       }
@@ -20,9 +23,21 @@ class UserService {
       
       updateData = await UserModel.update(
         { balance: newUserBalance },
-        { where: { id: userId }, returning: true, plain: true },
+        { where: { id: userId }, 
+          returning: true, 
+          plain: true, 
+          transaction: t,
+        },
       );
     })
+
+    try {
+      await retryFunction();
+     } catch (e) {
+       if (e instanceof ApiError === false) {
+         await retryFunction();
+       }
+     }
 
     return updateData[1].dataValues;
   }
@@ -30,10 +45,13 @@ class UserService {
   async decreaseBalance(userId, changeBalanceDto) {
     let updateData = null;
 
-    await sequelize.transaction({
+    const retryFunction = async () => await sequelize.transaction({
       isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE,
     }, async (t) => {
-      const user = await UserModel.findByPk(userId, {plain: true});
+      const user = await UserModel.findByPk(userId, {
+        plain: true,
+        transaction: t,
+      });
       if (!user) {
         throw ApiError.NotFound('no such user');
       }
@@ -45,9 +63,21 @@ class UserService {
       
       updateData = await UserModel.update(
         { balance: newUserBalance },
-        { where: { id: userId }, returning: true, plain: true },
+        { where: { id: userId }, 
+          returning: true, 
+          plain: true, 
+          transaction: t,
+        },
       );
     })
+
+    try {
+     await retryFunction();
+    } catch (e) {
+      if (e instanceof ApiError === false) {
+        await retryFunction();
+      }
+    }
 
     return updateData[1].dataValues;
   }
