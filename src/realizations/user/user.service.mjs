@@ -36,8 +36,9 @@ class UserService {
      } catch (e) {
        if (e instanceof ApiError === false) {
          await retryFunction();
-       }
-       throw e;
+       } else {
+        throw e;
+      }
      }
 
     return updateData[1].dataValues;
@@ -77,8 +78,9 @@ class UserService {
     } catch (e) {
       if (e instanceof ApiError === false) {
         await retryFunction();
+      } else {
+        throw e;
       }
-      throw e;
     }
 
     return updateData[1].dataValues;
