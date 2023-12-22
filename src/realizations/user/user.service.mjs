@@ -1,4 +1,4 @@
-import { Transaction } from "sequelize";
+import { Sequelize, Transaction } from "sequelize";
 import { sequelize } from "../../db.mjs";
 import { ApiError } from "../../errors/api.error.mjs";
 import { UserModel } from "./model/user.model.mjs";
@@ -77,6 +77,7 @@ class UserService {
       if (e instanceof ApiError === false) {
         await retryFunction();
       }
+      throw e;
     }
 
     return updateData[1].dataValues;
