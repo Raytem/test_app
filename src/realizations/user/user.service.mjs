@@ -37,6 +37,7 @@ class UserService {
        if (e instanceof ApiError === false) {
          await retryFunction();
        }
+       throw e;
      }
 
     return updateData[1].dataValues;
