@@ -1,0 +1,16 @@
+ upstream appcluster {
+  server ${APP1_HOST}:${APP_PORT};
+  server ${APP2_HOST}:${APP_PORT};
+  
+}
+ 
+ server {
+  listen ${APP_PORT};
+  server_name ${APP_HOST};
+  root /;
+
+  location / {
+    proxy_pass http://appcluster/;
+  }
+}
+
