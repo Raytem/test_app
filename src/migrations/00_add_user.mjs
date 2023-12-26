@@ -14,10 +14,15 @@ export async function up({ context: queryInterface }) {
 		},
 	});
 
-  await queryInterface.sequelize.query(`
-  INSERT INTO users (id, balance)
-  VALUES ('1', '10000');
-`);
+	try {
+		await queryInterface.sequelize.query(`
+			INSERT INTO users (id, balance)
+			VALUES ('1', '10000');
+		`);
+	} catch (e) {
+		console.log('user already exists');
+	}
+
 }
 
 export async function down({ context: queryInterface }) {

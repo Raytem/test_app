@@ -1,7 +1,9 @@
  upstream appcluster {
   server ${APP1_HOST}:${APP_PORT};
   server ${APP2_HOST}:${APP_PORT};
-  
+  server ${APP3_HOST}:${APP_PORT};
+  server ${APP4_HOST}:${APP_PORT};
+  server ${APP5_HOST}:${APP_PORT};
 }
  
  server {
@@ -13,4 +15,3 @@
     proxy_pass http://appcluster/;
   }
 }
-

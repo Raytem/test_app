@@ -1,4 +1,5 @@
 version: '3'
+name: test_task
 
 networks:
   inside_net:
@@ -7,10 +8,14 @@ networks:
 services:
   nginx:
     image: nginx:1.25.3
-    networks:
-      - inside_net
     depends_on:
       - app1
+      - app2
+      - app3
+      - app4
+      - app5
+    networks:
+      - inside_net
     ports:
       - '${APP_PORT}:${APP_PORT}'
     volumes:
@@ -25,22 +30,54 @@ services:
       - 'APP5_HOST=${APP5_HOST}'
 
   app1:
-    build: .
+    image: test_task-app
     networks:
       - inside_net
     depends_on:
       - postgres_db
     environment:
        - 'DB_HOST=postgres_db'
+       - 'DOCKER_CONTAINER_APP_HOST=${APP1_HOST}'
 
   app2:
-    build: .
+    image: test_task-app
     networks:
       - inside_net
     depends_on:
       - postgres_db
     environment:
        - 'DB_HOST=postgres_db'
+       - 'DOCKER_CONTAINER_APP_HOST=${APP2_HOST}'
+
+  app3:
+    image: test_task-app
+    networks:
+      - inside_net
+    depends_on:
+      - postgres_db
+    environment:
+       - 'DB_HOST=postgres_db'
+       - 'DOCKER_CONTAINER_APP_HOST=${APP3_HOST}'
+
+  app4:
+    image: test_task-app
+    networks:
+      - inside_net
+    depends_on:
+      - postgres_db
+    environment:
+       - 'DB_HOST=postgres_db'
+       - 'DOCKER_CONTAINER_APP_HOST=${APP4_HOST}'
+
+  app5:
+    image: test_task-app
+    networks:
+      - inside_net
+    depends_on:
+      - postgres_db
+    environment:
+       - 'DB_HOST=postgres_db'
+       - 'DOCKER_CONTAINER_APP_HOST=${APP5_HOST}'
 
   adminer:
     image: adminer
@@ -55,8 +92,6 @@ services:
 
   postgres_db: 
     image: postgres
-    volumes:
-      - ./pg_data:/var/lib/postgresql/data
     networks: 
       - inside_net
     environment:

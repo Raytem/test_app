@@ -4,6 +4,8 @@ import appRouter from './router.mjs';
 import errorMiddleware from './middlewares/error-middleware.mjs';
 import { sequelize } from './db.mjs';
 import { umzug } from './db.mjs';
+import cronTaskService from './realizations/cronTask/cron-task.service.mjs';
+import { sleep } from './utils/sleep.mjs';
 
 dotenv.config();
 
@@ -23,5 +25,13 @@ app.listen(port, async () => {
     console.error('----Unable to connect to the DB:', e);
   }
 
-  await umzug.up();
+  if (process.env.DOCKER_CONTAINER_APP_HOST === process.env.APP1_HOST) {
+    console.log('---Running migrations...');
+    await umzug.up();
+    console.log('---Migrations was applied');
+  } else {
+    await sleep(3000);
+  }
+
+  await cronTaskService.scheduleTasks();
 })
